@@ -1,0 +1,17 @@
+server:
+  name: imagewrapper
+  port: 8080
+spring:
+  servlet:
+    multipart:
+      max-file-size: 128MB
+      max-request-size: 128MB
+  datasource:
+    url: ${DB_URL}
+    username: user
+    password: pass
+  liquibase:
+    change-log: changelog/2022-11-06-create-task-table.sql
+    enabled: false
+baseUrl: http://localhost/
+basePath: .static

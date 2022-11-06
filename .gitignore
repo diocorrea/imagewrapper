@@ -18,7 +18,8 @@ target/
 *.iws
 *.iml
 *.ipr
-
+/.static/tmp/*.png
+/.static/*.png
 /.postgres-data
 ### NetBeans ###
 /nbproject/private/
