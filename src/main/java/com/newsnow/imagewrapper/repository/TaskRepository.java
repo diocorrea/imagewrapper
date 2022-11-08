@@ -38,9 +38,18 @@ public class TaskRepository {
 
     public Task create(Task task) {
         TaskRecord taskRecord = TaskRecordConverter.asRecord(task);
-        taskRecord.setId(UUID.randomUUID());
+        if(task.getId() == null ){
+            taskRecord.setId(UUID.randomUUID());
+        }
         taskRecord.setCreated(LocalDateTime.now());
         dsl.insertInto(Tables.TASK).set(taskRecord).execute();
         return selectTaskById(taskRecord.getId()).orElseThrow();
+    }
+
+    public Optional<Task> selectTaskByMd5AndWidthHeight(String md5, Integer width, Integer height){
+        return dsl.select(Tables.TASK)
+                .from(TASK)
+                .where(TASK.MD5.eq(md5).and(TASK.HEIGHT.eq(height)).and(TASK.WIDTH.eq(width)))
+                .stream().findFirst().map(t -> TaskRecordConverter.asTask(t.value1()));
     }
 }

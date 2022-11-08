@@ -100,7 +100,7 @@ public class Task {
                 ", url='" + url + '\'' +
                 ", width=" + width +
                 ", height=" + height +
-                ", timestamp=" + created +
+                ", created=" + created +
                 '}';
     }
 

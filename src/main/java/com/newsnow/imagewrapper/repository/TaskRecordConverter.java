@@ -26,6 +26,7 @@ public class TaskRecordConverter {
 
     public static TaskRecord asRecord(Task task) {
         var ret = new TaskRecord();
+        ret.setId(task.getId());
         ret.setMd5(task.getMd5());
         ret.setUrl(task.getUrl());
         ret.setFilename(task.getFileName());

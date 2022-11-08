@@ -36,44 +36,53 @@ public class ResizeImageService {
         this.taskRepository = taskRepository;
     }
 
-    public Task resizeTask(InputStream inputStream, String imageName, Integer width, Integer height) throws IOException {
+    public Task resizeTask(InputStream inputStream, Integer width, Integer height) throws IOException {
 
         Objects.requireNonNull(inputStream);
-        Objects.requireNonNull(imageName);
         Objects.requireNonNull(width);
         Objects.requireNonNull(height);
 
-        if(imageName.isBlank() || (imageName.split("\\.").length < 2)){
-            throw new IllegalArgumentException("Invalid image name");
-        }
+        var tmpFileName = UUID.randomUUID();
 
         Path baseFolder = Path.of(basePath);
-        var newName = imageName + "-" + width + "-" + height + ".png";
+        var id = UUID.randomUUID();
+        String newName = id + ".png";
         var url = baseUrl + newName;
 
-        File oldFile = storeFile(inputStream, imageName, baseFolder);
+        Path oldFile = storeFile(inputStream, tmpFileName.toString(), baseFolder);
+
+        String md5 = getMd5(oldFile.toFile());
+
+        var stored = taskRepository.selectTaskByMd5AndWidthHeight(md5,width,height);
+        if(stored.isPresent()){
+            return stored.get();
+        }
+
+
         File newFile = new File(baseFolder.toAbsolutePath() + File.separator + newName);
 
         Task task = new Task.TaskBuilder()
+                .id(id)
                 .url(url)
                 .width(width)
                 .height(height)
-                .fileName(newName)
-                .md5(getMd5(oldFile)).build();
+                .fileName(id.toString())
+                .md5(md5).build();
 
-        transformImage(width, height, oldFile, newFile);
+        transformImage(width, height, oldFile.toFile(), newFile);
 
-        Files.delete(oldFile.toPath());
+        Files.delete(oldFile);
 
         return taskRepository.create(task);
     }
 
-    private static File storeFile(InputStream inputStream, String imageName, Path baseFolder) throws IOException {
-        File oldFile = new File(baseFolder.toAbsolutePath() + File.separator + "tmp" + File.separator + imageName);
 
+    private static Path storeFile(InputStream inputStream, String imageName, Path baseFolder) throws IOException {
+        Path oldFile = Path.of(baseFolder.toAbsolutePath() + File.separator + "tmp" + File.separator + imageName);
+        Files.createDirectories(oldFile);
         Files.copy(
                 inputStream,
-                oldFile.toPath(),
+                oldFile,
                 StandardCopyOption.REPLACE_EXISTING);
         IOUtils.closeQuietly(inputStream);
         return oldFile;

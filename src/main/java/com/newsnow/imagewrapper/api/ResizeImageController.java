@@ -1,5 +1,6 @@
 package com.newsnow.imagewrapper.api;
 
+import com.newsnow.imagewrapper.api.exception.ValidationException;
 import com.newsnow.imagewrapper.domain.Task;
 import com.newsnow.imagewrapper.service.ResizeImageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,11 @@ public class ResizeImageController {
     public ResponseEntity<Task> resizeImage(@RequestParam MultipartFile image,
                                             @RequestParam Integer width,
                                             @RequestParam Integer height) throws IOException {
+        validate(image, width, height);
 
         return ResponseEntity.ok()
                 .body(resizeImageService.resizeTask(
                         image.getInputStream(),
-                        image.getOriginalFilename(),
                         width,
                         height));
     }
@@ -42,6 +43,20 @@ public class ResizeImageController {
         return resizeImageService.searchTask(taskid)
                 .map(task -> ResponseEntity.ok().body(task))
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    private void validate(MultipartFile image,
+                          Integer width,
+                          Integer height) {
+        if (image == null) {
+            throw new ValidationException("Image cannot be null");
+        }
+        if (width > 2160) {
+            throw new ValidationException("Width cannot be bigger than 2160");
+        }
+        if (height > 3840) {
+            throw new ValidationException("Height cannot be bigger than 3840");
+        }
     }
 
 }
