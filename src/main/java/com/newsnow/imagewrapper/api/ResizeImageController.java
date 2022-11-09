@@ -2,6 +2,7 @@ package com.newsnow.imagewrapper.api;
 
 import com.newsnow.imagewrapper.api.exception.ValidationException;
 import com.newsnow.imagewrapper.domain.Task;
+import com.newsnow.imagewrapper.domain.TaskList;
 import com.newsnow.imagewrapper.service.ResizeImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -41,6 +42,13 @@ public class ResizeImageController {
     @GetMapping(path = "/task/{taskid}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Task> resizeImage(@PathVariable UUID taskid) {
         return resizeImageService.searchTask(taskid)
+                .map(task -> ResponseEntity.ok().body(task))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping(path = "/task", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TaskList> resizeImage() {
+        return resizeImageService.getall()
                 .map(task -> ResponseEntity.ok().body(task))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

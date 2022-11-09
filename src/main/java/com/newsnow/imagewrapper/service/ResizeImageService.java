@@ -1,6 +1,7 @@
 package com.newsnow.imagewrapper.service;
 
 import com.newsnow.imagewrapper.domain.Task;
+import com.newsnow.imagewrapper.domain.TaskList;
 import com.newsnow.imagewrapper.repository.TaskRepository;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -15,6 +16,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -124,5 +126,14 @@ public class ResizeImageService {
 
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public Optional<TaskList> getall() {
+        List<Task> tasks = taskRepository.selectAllTasks();
+        if(tasks.isEmpty()){
+            TaskList taskList = new TaskList(tasks);
+            return Optional.of(taskList);
+        }
+        return Optional.empty();
     }
 }
