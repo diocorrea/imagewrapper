@@ -46,7 +46,7 @@ public class ResizeImageController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping(path = "/task", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/taskList", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TaskList> resizeImage() {
         return resizeImageService.getall()
                 .map(task -> ResponseEntity.ok().body(task))

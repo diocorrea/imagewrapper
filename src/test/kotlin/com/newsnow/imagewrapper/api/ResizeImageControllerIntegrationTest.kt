@@ -140,8 +140,19 @@ class ResizeImageControllerIntegrationTest : AbstractIntegrationTest() {
 
     @Test
     fun `should get all All tasks`() {
+        val parameters = LinkedMultiValueMap<String, Any>()
+        parameters.add("image", smallImage)
+        parameters.add("height", 10)
+        parameters.add("width", 100)
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+        restTemplate.postForEntity(/* url = */ "http://localhost:$port/task",
+                HttpEntity<LinkedMultiValueMap<String, Any>>(parameters, headers),
+                Task::class.java)
+
         val response =
-            restTemplate.getForEntity(/* url = */ "http://localhost:$port/task", TaskList::class.java)
+            restTemplate.getForEntity(/* url = */ "http://localhost:$port/taskList", TaskList::class.java)
 
         assertEquals(HttpStatus.OK, response.statusCode)
         assertNotNull(response.body)

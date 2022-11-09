@@ -1,12 +1,14 @@
 package com.newsnow.imagewrapper.service
 
 import com.newsnow.imagewrapper.domain.Task
+import com.newsnow.imagewrapper.domain.TaskList
 import com.newsnow.imagewrapper.repository.TaskRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -206,6 +208,14 @@ class ResizeImageServiceTest {
                 /* height = */ h
             )
         }
+    }
+
+    @Test
+    fun `should return all elements on the getall method`() {
+        every { taskRepository.selectAllTasks() }.answers { listOf( Task.TaskBuilder().build()) }
+
+        assertTrue( serviceUnderTest.getall().isPresent)
+        assertEquals(1, serviceUnderTest.getall().get().tasks.size)
     }
 
     @Test

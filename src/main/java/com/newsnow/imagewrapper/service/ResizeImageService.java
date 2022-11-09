@@ -130,7 +130,7 @@ public class ResizeImageService {
 
     public Optional<TaskList> getall() {
         List<Task> tasks = taskRepository.selectAllTasks();
-        if(tasks.isEmpty()){
+        if(!tasks.isEmpty()){
             TaskList taskList = new TaskList(tasks);
             return Optional.of(taskList);
         }
