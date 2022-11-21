@@ -24,7 +24,7 @@ class AbstractIntegrationTest {
     companion object {
         @ClassRule
         @JvmStatic
-        val postgreSQLContainer: PostgreSQLContainer<*> = PostgreSQLContainer("postgres:13.8")
+        val postgresSQLContainer: PostgreSQLContainer<*> = PostgreSQLContainer("postgres:15.1")
             .withDatabaseName("image-wrapper-db")
             .withExposedPorts(5432)
             .withUsername("user")
@@ -34,14 +34,14 @@ class AbstractIntegrationTest {
         @ClassRule
         @DynamicPropertySource
         fun init(registry: DynamicPropertyRegistry) {
-            postgreSQLContainer.start()
-            registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl)
+            postgresSQLContainer.start()
+            registry.add("spring.datasource.url", postgresSQLContainer::getJdbcUrl)
         }
 
         @AfterAll
         @JvmStatic
         fun destroy() {
-            postgreSQLContainer.stop()
+            postgresSQLContainer.stop()
 
             val tmp = Path.of(ResizeImageServiceTest.basePath + File.separator + "tmp")
             val base = Path.of(ResizeImageServiceTest.basePath + File.separator + "tmp")

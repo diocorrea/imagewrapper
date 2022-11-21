@@ -1,7 +1,6 @@
 package com.newsnow.imagewrapper.service
 
 import com.newsnow.imagewrapper.domain.Task
-import com.newsnow.imagewrapper.domain.TaskList
 import com.newsnow.imagewrapper.repository.TaskRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -17,8 +16,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.Optional
-import kotlin.io.path.deleteIfExists
+import java.util.*
 import kotlin.io.path.exists
 
 class ResizeImageServiceTest {
@@ -144,7 +142,7 @@ class ResizeImageServiceTest {
         val h = Integer.MAX_VALUE
 
         assertThrows<IllegalArgumentException> {
-          serviceUnderTest.resizeTask(
+            serviceUnderTest.resizeTask(
                 /* inputStream = */ FileInputStream(smallImage.toFile()),
                 /* width = */ w,
                 /* height = */ h
@@ -174,7 +172,7 @@ class ResizeImageServiceTest {
         val h = Integer.MAX_VALUE
 
         assertThrows<IllegalArgumentException> {
-           serviceUnderTest.resizeTask(
+            serviceUnderTest.resizeTask(
                 /* inputStream = */ FileInputStream(smallImage.toFile()),
                 /* width = */ w,
                 /* height = */ h
@@ -188,7 +186,7 @@ class ResizeImageServiceTest {
         val h = null
 
         assertThrows<NullPointerException> {
-           serviceUnderTest.resizeTask(
+            serviceUnderTest.resizeTask(
                 /* inputStream = */ FileInputStream(smallImage.toFile()),
                 /* width = */ w,
                 /* height = */ h
@@ -212,9 +210,9 @@ class ResizeImageServiceTest {
 
     @Test
     fun `should return all elements on the getall method`() {
-        every { taskRepository.selectAllTasks() }.answers { listOf( Task.TaskBuilder().build()) }
+        every { taskRepository.selectAllTasks() }.answers { listOf(Task.TaskBuilder().build()) }
 
-        assertTrue( serviceUnderTest.getall().isPresent)
+        assertTrue(serviceUnderTest.getall().isPresent)
         assertEquals(1, serviceUnderTest.getall().get().tasks.size)
     }
 

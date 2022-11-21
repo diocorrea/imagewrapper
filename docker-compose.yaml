@@ -16,21 +16,19 @@ services:
     links:
       - db
   db:
-    image: postgres:13.8
+    image: postgres:15.1-alpine
     container_name: image-wrapper-db
     environment:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=pass
       - POSTGRES_DB=postgress
     restart: unless-stopped
-    volumes:
-      - ./.postgres-data:/var/lib/postgresql/data
     ports:
       - "5431:5432"
   migration:
     image: liquibase/liquibase
     stdin_open: true
-    command: [ "sh", "/script/wait-for-postgress.sh",
+    command: [ "sh", "/script/wait-for-postgres.sh",
                "sh", "/script/liquibase-migrate.sh"]
     volumes:
       - ./src/main/resources/changelog:/liquibase/changelog
