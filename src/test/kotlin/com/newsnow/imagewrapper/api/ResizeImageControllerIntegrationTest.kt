@@ -147,9 +147,11 @@ class ResizeImageControllerIntegrationTest : AbstractIntegrationTest() {
 
         val headers = HttpHeaders()
         headers.contentType = MediaType.MULTIPART_FORM_DATA
-        restTemplate.postForEntity(/* url = */ "http://localhost:$port/task",
-                HttpEntity<LinkedMultiValueMap<String, Any>>(parameters, headers),
-                Task::class.java)
+        restTemplate.postForEntity(/* url = */
+            "http://localhost:$port/task",
+            HttpEntity<LinkedMultiValueMap<String, Any>>(parameters, headers),
+            Task::class.java
+        )
 
         val response =
             restTemplate.getForEntity(/* url = */ "http://localhost:$port/taskList", TaskList::class.java)
@@ -158,5 +160,4 @@ class ResizeImageControllerIntegrationTest : AbstractIntegrationTest() {
         assertNotNull(response.body)
         assertEquals(1, response.body!!.tasks.size)
     }
-
 }
